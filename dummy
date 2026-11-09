@@ -1,0 +1,6 @@
+print("Supply Chain Management Project")
+
+def welcome():
+    print("Welcome to our project!")
+
+welcome()
