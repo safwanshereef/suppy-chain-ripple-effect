@@ -1,6 +1,31 @@
-wertyuiop;lkjhgvfcxzzxcvbhjkl;';lokiuhgfdswert6y7u890p[;pkjhgfdxzxdfghjkl;pliuhyfdsrtyu890poiuygfdtyuiop;lkjhgfcxdfgh
-lkjhgcxcvbnl;ouytrdsdfgh
-'poiuytfdchjkl
-'oigfxjiu43e567890pkjhgzxghipoknbcftyuoihvbnm
-jrtyuiop;lkjhgfcvhjkop[-09876trertyuiokn
-lkjhgfdsaqwe7890-==[]\]['/.;.l,mnbvcxzaqwertyu78i9o0-098765fghj.
+AtmoGraph – Week 2
+
+NLP & News Integration
+
+Objective
+
+To develop an NLP-based system that processes supply chain news articles, extracts important entities, and identifies supply chain disruptions.
+
+Tasks
+
+- Collect sample supply chain news articles.
+- Implement NLP using spaCy.
+- Perform Named Entity Recognition (NER).
+- Extract companies, organizations and locations.
+- Detect disruptions such as port strikes, shipping delays and factory shutdowns.
+- Connect extracted entities with the Neo4j graph database.
+- Update the graph with detected disruption information.
+
+Technologies Used
+
+- Python
+- spaCy
+- Hugging Face
+- Neo4j
+- FastAPI
+
+Expected Outcome
+
+A basic NLP system capable of analyzing supply chain news, identifying disruptions, extracting relevant entities, and connecting the results with the Neo4j supply chain graph.
+
+
