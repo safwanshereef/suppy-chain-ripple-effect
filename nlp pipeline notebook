@@ -1,0 +1,476 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "e64914c0-6ad2-478c-99e6-9566fcfab8ac",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Requirement already satisfied: spacy in c:\\users\\safwan\\anaconda3\\lib\\site-packages (3.8.18)\n",
+      "Requirement already satisfied: feedparser in c:\\users\\safwan\\anaconda3\\lib\\site-packages (6.0.14)\n",
+      "Requirement already satisfied: spacy-legacy<3.1.0,>=3.0.11 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (3.0.12)\n",
+      "Requirement already satisfied: spacy-loggers<2.0.0,>=1.0.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (1.0.5)\n",
+      "Requirement already satisfied: murmurhash<1.1.0,>=0.28.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (1.0.16)\n",
+      "Requirement already satisfied: cymem<2.1.0,>=2.0.2 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (2.0.16)\n",
+      "Requirement already satisfied: preshed!=3.0.14,<3.1.0,>=3.0.2 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (3.0.15)\n",
+      "Requirement already satisfied: thinc<8.4.0,>=8.3.12 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (8.3.14)\n",
+      "Requirement already satisfied: wasabi<1.2.0,>=0.9.1 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (1.1.3)\n",
+      "Requirement already satisfied: srsly<3.0.0,>=2.5.3 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (2.5.6)\n",
+      "Requirement already satisfied: catalogue<2.1.0,>=2.0.6 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (2.0.10)\n",
+      "Requirement already satisfied: weasel<2.0.0,>=1.0.1 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (1.0.1)\n",
+      "Requirement already satisfied: confection<2.0.0,>=1.3.4 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (1.3.4)\n",
+      "Requirement already satisfied: typer<1.0.0,>=0.3.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (0.20.0)\n",
+      "Requirement already satisfied: click<9.0.0,>=8.2.1 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (8.2.1)\n",
+      "Requirement already satisfied: tqdm<5.0.0,>=4.38.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (4.67.1)\n",
+      "Requirement already satisfied: numpy>=1.19.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (2.3.5)\n",
+      "Requirement already satisfied: requests<3.0.0,>=2.13.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (2.32.5)\n",
+      "Requirement already satisfied: pydantic<3.0.0,>=2.0.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (2.12.4)\n",
+      "Requirement already satisfied: jinja2 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (3.1.6)\n",
+      "Requirement already satisfied: setuptools in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (80.9.0)\n",
+      "Requirement already satisfied: packaging>=20.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from spacy) (25.0)\n",
+      "Requirement already satisfied: colorama in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from click<9.0.0,>=8.2.1->spacy) (0.4.6)\n",
+      "Requirement already satisfied: annotated-types>=0.6.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from pydantic<3.0.0,>=2.0.0->spacy) (0.6.0)\n",
+      "Requirement already satisfied: pydantic-core==2.41.5 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from pydantic<3.0.0,>=2.0.0->spacy) (2.41.5)\n",
+      "Requirement already satisfied: typing-extensions>=4.14.1 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from pydantic<3.0.0,>=2.0.0->spacy) (4.15.0)\n",
+      "Requirement already satisfied: typing-inspection>=0.4.2 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from pydantic<3.0.0,>=2.0.0->spacy) (0.4.2)\n",
+      "Requirement already satisfied: charset_normalizer<4,>=2 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from requests<3.0.0,>=2.13.0->spacy) (3.4.4)\n",
+      "Requirement already satisfied: idna<4,>=2.5 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from requests<3.0.0,>=2.13.0->spacy) (3.20)\n",
+      "Requirement already satisfied: urllib3<3,>=1.21.1 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from requests<3.0.0,>=2.13.0->spacy) (2.5.0)\n",
+      "Requirement already satisfied: certifi>=2017.4.17 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from requests<3.0.0,>=2.13.0->spacy) (2026.7.22)\n",
+      "Requirement already satisfied: blis<1.4.0,>=1.3.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from thinc<8.4.0,>=8.3.12->spacy) (1.3.4)\n",
+      "Requirement already satisfied: shellingham>=1.3.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from typer<1.0.0,>=0.3.0->spacy) (1.5.4)\n",
+      "Requirement already satisfied: rich>=10.11.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from typer<1.0.0,>=0.3.0->spacy) (14.2.0)\n",
+      "Requirement already satisfied: cloudpathlib>=0.7.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from weasel<2.0.0,>=1.0.1->spacy) (0.26.0)\n",
+      "Requirement already satisfied: smart-open>=5.2.1 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from smart-open[http]>=5.2.1->weasel<2.0.0,>=1.0.1->spacy) (9.0.5)\n",
+      "Requirement already satisfied: httpx>=0.24.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from weasel<2.0.0,>=1.0.1->spacy) (0.28.1)\n",
+      "Requirement already satisfied: feedparser-sgmllib<3,>=2 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from feedparser) (2.1.0)\n",
+      "Requirement already satisfied: anyio in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from httpx>=0.24.0->weasel<2.0.0,>=1.0.1->spacy) (4.10.0)\n",
+      "Requirement already satisfied: httpcore==1.* in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from httpx>=0.24.0->weasel<2.0.0,>=1.0.1->spacy) (1.0.9)\n",
+      "Requirement already satisfied: h11>=0.16 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from httpcore==1.*->httpx>=0.24.0->weasel<2.0.0,>=1.0.1->spacy) (0.16.0)\n",
+      "Requirement already satisfied: markdown-it-py>=2.2.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from rich>=10.11.0->typer<1.0.0,>=0.3.0->spacy) (2.2.0)\n",
+      "Requirement already satisfied: pygments<3.0.0,>=2.13.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from rich>=10.11.0->typer<1.0.0,>=0.3.0->spacy) (2.19.2)\n",
+      "Requirement already satisfied: mdurl~=0.1 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from markdown-it-py>=2.2.0->rich>=10.11.0->typer<1.0.0,>=0.3.0->spacy) (0.1.2)\n",
+      "Requirement already satisfied: wrapt in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from smart-open>=5.2.1->smart-open[http]>=5.2.1->weasel<2.0.0,>=1.0.1->spacy) (1.17.0)\n",
+      "Requirement already satisfied: sniffio>=1.1 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from anyio->httpx>=0.24.0->weasel<2.0.0,>=1.0.1->spacy) (1.3.0)\n",
+      "Requirement already satisfied: MarkupSafe>=2.0 in c:\\users\\safwan\\anaconda3\\lib\\site-packages (from jinja2->spacy) (3.0.2)\n",
+      "Collecting en-core-web-sm==3.8.0\n",
+      "  Using cached https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl (12.8 MB)\n",
+      "\u001b[38;5;2m[+] Download and installation successful\u001b[0m\n",
+      "You can now load the package via spacy.load('en_core_web_sm')\n"
+     ]
+    }
+   ],
+   "source": [
+    "!pip install spacy feedparser\n",
+    "!python -m spacy download en_core_web_sm"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "8b8720f7-b889-458e-a943-6f439ea5848e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdin",
+     "output_type": "stream",
+     "text": [
+      "Neo4j password:  ········\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Connected to Neo4j and spaCy model loaded\n"
+     ]
+    }
+   ],
+   "source": [
+    "import json, os\n",
+    "import spacy\n",
+    "from neo4j import GraphDatabase\n",
+    "from getpass import getpass\n",
+    "\n",
+    "driver = GraphDatabase.driver(\"bolt://127.0.0.1:7687\", auth=(\"neo4j\", getpass(\"Neo4j password: \")))\n",
+    "DATABASE = \"atmograph\"\n",
+    "driver.verify_connectivity()\n",
+    "\n",
+    "nlp = spacy.load(\"en_core_web_sm\")\n",
+    "print(\"Connected to Neo4j and spaCy model loaded\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "e5e4283d-27df-48ed-9565-6996d4018ea0",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'PORT01': 'Rotterdam', 'PORT02': 'Singapore', 'PORT03': 'Los Angeles', 'PORT04': 'Shanghai', 'PORT05': 'Mumbai', 'PORT06': 'Hamburg', 'PORT07': 'Busan', 'PORT08': 'Santos', 'PORT09': 'Antwerp', 'PORT10': 'Dubai', 'PORT11': 'Felixstowe'}\n"
+     ]
+    }
+   ],
+   "source": [
+    "CITIES = [\"Rotterdam\", \"Singapore\", \"Los Angeles\", \"Shanghai\", \"Mumbai\", \"Hamburg\",\n",
+    "          \"Busan\", \"Santos\", \"Antwerp\", \"Dubai\", \"Felixstowe\"]\n",
+    "\n",
+    "with driver.session(database=DATABASE) as session:\n",
+    "    port_codes = sorted(r[\"code\"] for r in session.run(\"MATCH (p:Port) RETURN p.port_code AS code\"))\n",
+    "\n",
+    "port_city = dict(zip(port_codes, CITIES))\n",
+    "city_port = {city.lower(): code for code, city in port_city.items()}\n",
+    "print(port_city)\n",
+    "\n",
+    "with driver.session(database=DATABASE) as session:\n",
+    "    for code, city in port_city.items():\n",
+    "        session.run(\"MATCH (p:Port {port_code: $c}) SET p.city = $city\", c=code, city=city)\n",
+    "\n",
+    "with open(\"port_city_map.json\", \"w\") as f:\n",
+    "    json.dump(port_city, f, indent=2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "24f11cfb-dc53-4bc2-8c1c-b73cffb97c9e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "10 headlines loaded\n"
+     ]
+    }
+   ],
+   "source": [
+    "news = [\n",
+    "    \"Dock workers at the Port of Rotterdam began a 48-hour strike on Monday, delaying container ships across Europe.\",\n",
+    "    \"A cyclone warning has forced the Port of Singapore to suspend loading operations.\",\n",
+    "    \"Congestion at the Port of Los Angeles is causing delays of up to two weeks for electronics shipments.\",\n",
+    "    \"Shanghai port reopened on Tuesday after a short closure caused by heavy fog.\",\n",
+    "    \"A new trade agreement between India and the UAE is expected to boost shipping volumes through Mumbai.\",\n",
+    "    \"Hamburg terminal operators warned of a shutdown after a cyber attack on port systems.\",\n",
+    "    \"Fuel prices rose slightly this week, with no impact on port operations in Busan.\",\n",
+    "    \"Flooding near the Port of Santos halted truck access and delayed coffee exports.\",\n",
+    "    \"Workers at Antwerp port called off the planned walkout after reaching an agreement.\",\n",
+    "    \"Heavy congestion and a crane breakdown are slowing vessels at the Port of Dubai.\",\n",
+    "]\n",
+    "\n",
+    "with open(\"news_sample.txt\", \"w\", encoding=\"utf-8\") as f:\n",
+    "    f.write(\"\\n\".join(news))\n",
+    "\n",
+    "with open(\"news_sample.txt\", encoding=\"utf-8\") as f:\n",
+    "    headlines = [line.strip() for line in f if line.strip()]\n",
+    "\n",
+    "print(len(headlines), \"headlines loaded\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "30f9db10-fb9c-48c4-9fc1-195da3dff79c",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Dock workers at the Port of Rotterdam began a 48-hour strike on Monday, delaying container ships across Europe.\n",
+      "   entities: [('the Port of Rotterdam', 'LOC'), ('48-hour', 'TIME'), ('Monday', 'DATE'), ('Europe', 'LOC')]\n",
+      "\n",
+      "A cyclone warning has forced the Port of Singapore to suspend loading operations.\n",
+      "   entities: [('the Port of Singapore', 'LOC')]\n",
+      "\n",
+      "Congestion at the Port of Los Angeles is causing delays of up to two weeks for electronics shipments.\n",
+      "   entities: [('the Port of Los Angeles', 'FAC'), ('up to two weeks', 'DATE')]\n",
+      "\n",
+      "Shanghai port reopened on Tuesday after a short closure caused by heavy fog.\n",
+      "   entities: [('Shanghai', 'GPE'), ('Tuesday', 'DATE')]\n",
+      "\n",
+      "A new trade agreement between India and the UAE is expected to boost shipping volumes through Mumbai.\n",
+      "   entities: [('India', 'GPE'), ('UAE', 'ORG'), ('Mumbai', 'GPE')]\n",
+      "\n",
+      "Hamburg terminal operators warned of a shutdown after a cyber attack on port systems.\n",
+      "   entities: [('Hamburg', 'GPE')]\n",
+      "\n",
+      "Fuel prices rose slightly this week, with no impact on port operations in Busan.\n",
+      "   entities: [('this week', 'DATE'), ('Busan', 'GPE')]\n",
+      "\n",
+      "Flooding near the Port of Santos halted truck access and delayed coffee exports.\n",
+      "   entities: [('the Port of Santos', 'LOC')]\n",
+      "\n",
+      "Workers at Antwerp port called off the planned walkout after reaching an agreement.\n",
+      "   entities: [('Antwerp', 'GPE')]\n",
+      "\n",
+      "Heavy congestion and a crane breakdown are slowing vessels at the Port of Dubai.\n",
+      "   entities: [('the Port of Dubai', 'FAC')]\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "for text in headlines:\n",
+    "    doc = nlp(text)\n",
+    "    print(text)\n",
+    "    print(\"   entities:\", [(e.text, e.label_) for e in doc.ents])\n",
+    "    print()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "d4464e39-98b6-4da7-a139-55914e9d8c40",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "PORT01 Rotterdam 0.9 - Dock workers at the Port of Rotterdam began a 48-hour strike on Monday, delaying container ships across Europe.\n",
+      "PORT02 Singapore 0.9 - A cyclone warning has forced the Port of Singapore to suspend loading operations.\n",
+      "PORT03 Los Angeles 0.6 - Congestion at the Port of Los Angeles is causing delays of up to two weeks for electronics shipments.\n",
+      "PORT04 Shanghai 0.1 - Shanghai port reopened on Tuesday after a short closure caused by heavy fog.\n",
+      "PORT06 Hamburg 0.9 - Hamburg terminal operators warned of a shutdown after a cyber attack on port systems.\n",
+      "PORT08 Santos 0.9 - Flooding near the Port of Santos halted truck access and delayed coffee exports.\n",
+      "PORT09 Antwerp 0.1 - Workers at Antwerp port called off the planned walkout after reaching an agreement.\n",
+      "PORT10 Dubai 0.6 - Heavy congestion and a crane breakdown are slowing vessels at the Port of Dubai.\n"
+     ]
+    }
+   ],
+   "source": [
+    "LABELS = {\"GPE\", \"LOC\", \"FAC\", \"ORG\"}\n",
+    "HIGH = [\"strike\", \"walkout\", \"shutdown\", \"closure\", \"suspend\", \"cyclone\", \"cyber attack\", \"flooding\", \"halted\", \"fire\", \"blockade\"]\n",
+    "MEDIUM = [\"congestion\", \"delay\", \"warning\", \"backlog\", \"breakdown\", \"shortage\"]\n",
+    "RESOLVED = [\"reopened\", \"called off\", \"no impact\", \"resumed\"]\n",
+    "\n",
+    "def score(text):\n",
+    "    t = text.lower()\n",
+    "    if not any(k in t for k in HIGH + MEDIUM):\n",
+    "        return 0.0\n",
+    "    if any(k in t for k in RESOLVED):\n",
+    "        return 0.1\n",
+    "    if any(k in t for k in HIGH):\n",
+    "        return 0.9\n",
+    "    return 0.6\n",
+    "\n",
+    "events = {}\n",
+    "for text in headlines:\n",
+    "    risk = score(text)\n",
+    "    if risk == 0:\n",
+    "        continue\n",
+    "    doc = nlp(text)\n",
+    "    for ent in doc.ents:\n",
+    "        if ent.label_ in LABELS:\n",
+    "            for city, code in city_port.items():\n",
+    "                if city in ent.text.lower():\n",
+    "                    if risk > events.get(code, {}).get(\"risk\", 0):\n",
+    "                        events[code] = {\"risk\": risk, \"event\": text}\n",
+    "\n",
+    "for code, e in events.items():\n",
+    "    print(code, port_city[code], e[\"risk\"], \"-\", e[\"event\"])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "e6ae4ede-6c38-4507-a64e-d11210d21d9c",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Risk updated in Neo4j\n"
+     ]
+    }
+   ],
+   "source": [
+    "with driver.session(database=DATABASE) as session:\n",
+    "    session.run(\"MATCH (n) WHERE n:Port OR n:Plant OR n:Customer SET n.risk_score = 0.0, n.last_event = null\")\n",
+    "\n",
+    "    for code, e in events.items():\n",
+    "        session.run(\n",
+    "            \"MATCH (p:Port {port_code: $c}) SET p.risk_score = $r, p.last_event = $e, p.updated_at = datetime()\",\n",
+    "            c=code, r=e[\"risk\"], e=e[\"event\"])\n",
+    "\n",
+    "    session.run(\"\"\"\n",
+    "        MATCH (pl:Plant)-[:HOSTED_AT]->(p:Port) WHERE p.risk_score > 0\n",
+    "        WITH pl, max(p.risk_score) AS m\n",
+    "        SET pl.risk_score = m * 0.7\n",
+    "    \"\"\")\n",
+    "\n",
+    "    session.run(\"\"\"\n",
+    "        MATCH (pl:Plant)-[:ORDERED_BY]->(c:Customer) WHERE pl.risk_score > 0\n",
+    "        WITH c, max(pl.risk_score) AS m\n",
+    "        SET c.risk_score = m * 0.5\n",
+    "    \"\"\")\n",
+    "\n",
+    "print(\"Risk updated in Neo4j\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "a523c1b7-8e01-45ff-a96e-56fdcf7fad68",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "PORTS AT RISK\n",
+      "   PORT08 Santos 0.9\n",
+      "   PORT02 Singapore 0.9\n",
+      "   PORT06 Hamburg 0.9\n",
+      "   PORT01 Rotterdam 0.9\n",
+      "   PORT10 Dubai 0.6\n",
+      "   PORT03 Los Angeles 0.6\n",
+      "   PORT04 Shanghai 0.1\n",
+      "   PORT09 Antwerp 0.1\n",
+      "Plant nodes affected: 16\n",
+      "Customer nodes affected: 46\n"
+     ]
+    }
+   ],
+   "source": [
+    "with driver.session(database=DATABASE) as session:\n",
+    "    print(\"PORTS AT RISK\")\n",
+    "    for r in session.run(\"MATCH (p:Port) WHERE p.risk_score > 0 RETURN p.port_code AS code, p.city AS city, p.risk_score AS risk ORDER BY risk DESC\"):\n",
+    "        print(\"  \", r[\"code\"], r[\"city\"], r[\"risk\"])\n",
+    "    for label in [\"Plant\", \"Customer\"]:\n",
+    "        n = session.run(\"MATCH (n:\" + label + \") WHERE n.risk_score > 0 RETURN count(n) AS n\").single()[\"n\"]\n",
+    "        print(label, \"nodes affected:\", n)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "5d1f2e81-6dba-481a-b231-5cc9a7f14766",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "70 risky nodes written to C:\\Users\\SAFWAN/atmograph-ui/public/risk.json\n"
+     ]
+    }
+   ],
+   "source": [
+    "risk = {}\n",
+    "with driver.session(database=DATABASE) as session:\n",
+    "    result = session.run(\"\"\"\n",
+    "        MATCH (n) WHERE n.risk_score IS NOT NULL AND n.risk_score > 0\n",
+    "        RETURN n.port_code AS port, n.plant_code AS plant, n.customer_id AS cust,\n",
+    "               n.risk_score AS risk, n.last_event AS event\n",
+    "    \"\"\")\n",
+    "    for r in result:\n",
+    "        key = r[\"port\"] or r[\"plant\"] or r[\"cust\"]\n",
+    "        risk[key] = {\"risk\": round(r[\"risk\"], 2), \"event\": r[\"event\"]}\n",
+    "\n",
+    "out = os.path.expanduser(\"~/atmograph-ui/public/risk.json\")\n",
+    "with open(out, \"w\") as f:\n",
+    "    json.dump(risk, f)\n",
+    "print(len(risk), \"risky nodes written to\", out)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "12d43071-e931-4597-acd4-2a557337c299",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "- Container peak season easing, port congestion ties up 10% of fleet - Seatrade Maritime News\n",
+      "- Port operational updates from around the world (11 Nov - 17 Nov 2026) - Kuehne+Nagel\n",
+      "- Black Sea sinkings and Danube congestion disrupt grain flows and lift freight costs - CMB News\n",
+      "- Port congestion has become a new normal, says MSC chief - Shipping Telegraph\n",
+      "- Namport shares further clarity on allegations of Walvis Bay Port congestion Staff Reporter THE Namibia Ports Authority (Namport) has shed more light on allegations of congestion at the Port of Walvis Bay, explaining that the Walvis Bay Container Terminal is c - Instagram\n",
+      "- Container terminals hit 72.2% capacity. The World Bank says that’s already past the congestion line - Trans.INFO\n",
+      "- Strait of Hormuz shutdown: How port congestion and schedule chaos are hitting shippers — and what to do about it - Xeneta\n",
+      "- Asian port congestion could disrupt supply chains well into 2027 - Metro Global\n",
+      "- Why port congestion is hiding container shipping’s overcapacity - Container News\n",
+      "- Managing Port Congestion: Avoid Shipping Delays with Air Express - DHL\n",
+      "- Hapag-Lloyd Vows to Keep Managing Costs Despite Boost From Freight Rates - WSJ\n",
+      "- Maersk raises outlook again as AI buildout, port congestion keep freight rates high - Reuters\n",
+      "- News Rate rises loom as port congestion hits four-year high - The Loadstar\n",
+      "- Suez Canal Return Won’t Resolve Global Shipping Congestion, DHL Warns - gCaptain\n",
+      "- Port operational updates from around the world (21 Oct - 27 Oct 2026) - Kuehne+Nagel\n",
+      "- Port Congestion: Protecting Your Inventory with Air Express Alternatives - DHL\n",
+      "- Ship rerouting a normal maritime activity, Namport says amid congestion claims Staff Reporter NAMPORT, the Namibian ports authority, has dismissed claims of a congestion crisis at the Port of Walvis Bay, stating that increased activity at the port and the rerou - Instagram\n",
+      "- Global port congestion is worse than expected - Metro Global\n",
+      "- UAE port congestion intensifies as delays increase at Khor Fakkan, Fujairah and Sharjah - Kuehne+Nagel\n",
+      "- Indian ports face mounting strain as redirected cargo intensifies congestion - Kuehne+Nagel\n"
+     ]
+    }
+   ],
+   "source": [
+    "import feedparser\n",
+    "feed = feedparser.parse(\"https://news.google.com/rss/search?q=port+strike+OR+port+congestion&hl=en\")\n",
+    "live = [e.title for e in feed.entries[:20]]\n",
+    "for h in live:\n",
+    "    print(\"-\", h)\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "83c7116c-dd23-4be9-b63c-507d7568af17",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4fcf513c-3e25-4e10-b74a-0bbeb0bf35d3",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "34121589-32d4-4ad7-8927-9db6ee68437c",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python [conda env:base] *",
+   "language": "python",
+   "name": "conda-base-py"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.13.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
